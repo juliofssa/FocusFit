@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.focusfit.app.data.DailyRepository
 import com.focusfit.app.data.LibraryRepository
 import com.focusfit.app.data.PlanRepository
+import com.focusfit.app.data.SettingsRepository
 import com.focusfit.app.domain.Exercise
 import com.focusfit.app.domain.LevelStatus
 import com.focusfit.app.domain.Progression
@@ -46,7 +47,10 @@ data class SessionUiState(
     val phase: Phase = Phase.OVERVIEW,
     val easier: Exercise? = null,
     val harder: Exercise? = null,
+    /** Personal video choices (exercise id → YouTube id) that replace the default ones. */
+    val videoOverrides: Map<String, String> = emptyMap(),
 ) {
+    fun videoFor(e: Exercise): String? = videoOverrides[e.id] ?: e.youtubeId
     val current: SessionStep? get() = steps.getOrNull(index)
     val next: SessionStep? get() = steps.drop(index + 1).firstOrNull { !it.isRest }
     val progress: Float get() = if (steps.isEmpty()) 0f else index / steps.size.toFloat()
@@ -58,6 +62,7 @@ class SessionViewModel @Inject constructor(
     private val library: LibraryRepository,
     private val plans: PlanRepository,
     private val daily: DailyRepository,
+    private val settings: SettingsRepository,
     @param:ApplicationContext private val context: Context,
 ) : ViewModel() {
 
@@ -73,9 +78,15 @@ class SessionViewModel @Inject constructor(
         viewModelScope.launch {
             val routine = library.workouts.routine(routineId) ?: return@launch
             val status = Progression.status(plans.workoutLogs.first().filter { it.routineId == routineId })
-            _state.value = SessionUiState(routine, status, SessionBuilder.build(routine, library.workouts, status.level))
+            _state.value = SessionUiState(
+                routine, status, SessionBuilder.build(routine, library.workouts, status.level),
+                videoOverrides = settings.videoOverrides.first(),
+            )
         }
     }
+
+    /** Pauses the timer while a how-to video is open. */
+    fun pause() = _state.update { it.copy(paused = true) }
 
     fun start() {
         startedAt = System.currentTimeMillis()

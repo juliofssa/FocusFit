@@ -10,3 +10,9 @@
 
 # Readable crash stack traces.
 -keepattributes SourceFile,LineNumberTable
+
+# YouTube player: the IFrame player calls back into Kotlin through a WebView JavaScript bridge.
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+-keep class com.pierfrancescosoffritti.androidyoutubeplayer.** { *; }

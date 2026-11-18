@@ -3,6 +3,7 @@ package com.focusfit.app.ui.profile
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.focusfit.app.ui.common.InfoCard
 import com.focusfit.app.ui.common.ScreenTitle
 import com.focusfit.app.ui.plan.PlanViewModel
+import com.focusfit.app.data.SettingsRepository
 
 @Composable
 fun ProfileScreen(
@@ -34,7 +37,10 @@ fun ProfileScreen(
     onTargets: () -> Unit,
     vm: PlanViewModel = hiltViewModel(),
     backup: BackupViewModel = hiltViewModel(),
+    content: ContentViewModel = hiltViewModel(),
 ) {
+    val contentState by content.state.collectAsStateWithLifecycle()
+    var editingUrl by remember { mutableStateOf(false) }
     val state by vm.state.collectAsStateWithLifecycle()
     val message by backup.message.collectAsStateWithLifecycle()
     var confirmRestore by remember { mutableStateOf(false) }
@@ -90,6 +96,26 @@ fun ProfileScreen(
             }
         }
         item {
+            val c = contentState
+            InfoCard(Modifier.padding(horizontal = 16.dp)) {
+                Text("🌐 Exercises, videos & meals", style = MaterialTheme.typography.titleMedium)
+                Text(if (c.downloaded) "Content v${c.version} (downloaded)" else "Built-in content v${c.version}")
+                Text(
+                    listOfNotNull(c.status, c.lastCheck?.let { "checked $it" }).joinToString(" · ")
+                        .ifEmpty { "Checks for new exercises and meals weekly on Wi-Fi. Download only, nothing about you is sent." },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = content::checkNow, enabled = !c.checking && c.url.isNotBlank()) {
+                        Text(if (c.checking) "Checking…" else "Check now")
+                    }
+                    TextButton(onClick = { editingUrl = true }) { Text("Source") }
+                    if (c.downloaded) TextButton(onClick = content::resetToBuiltIn) { Text("Use built-in") }
+                }
+            }
+        }
+        item {
             InfoCard(Modifier.padding(horizontal = 16.dp)) {
                 Text("💾 Backup & restore", style = MaterialTheme.typography.titleMedium)
                 Text(
@@ -112,6 +138,31 @@ fun ProfileScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
+    }
+
+    if (editingUrl) {
+        var url by remember { mutableStateOf(contentState.url) }
+        AlertDialog(
+            onDismissRequest = { editingUrl = false },
+            title = { Text("Content source") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        "Web folder that holds manifest.json, workouts.json and meals.json (e.g. a public GitHub repo's raw URL). " +
+                            "Leave empty to turn online updates off.",
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    OutlinedTextField(value = url, onValueChange = { url = it }, singleLine = false, modifier = Modifier.fillMaxWidth())
+                }
+            },
+            confirmButton = { TextButton(onClick = { content.setUrl(url); editingUrl = false }) { Text("Save") } },
+            dismissButton = {
+                Row {
+                    TextButton(onClick = { url = SettingsRepository.DEFAULT_CONTENT_URL }) { Text("Default") }
+                    TextButton(onClick = { editingUrl = false }) { Text("Cancel") }
+                }
+            },
+        )
     }
 
     if (confirmRestore) {

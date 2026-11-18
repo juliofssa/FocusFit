@@ -17,6 +17,9 @@ data class Exercise(
     val easierId: String? = null,
     val harderId: String? = null,
     val equipment: String = "none",
+    /** YouTube video id (11 chars) of a short demo; null = offer a YouTube search instead. */
+    val youtubeId: String? = null,
+    val videoStartSec: Int = 0,
 )
 
 @Serializable

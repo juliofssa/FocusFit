@@ -5,7 +5,8 @@ training, steps, reading, nutrition check-ins, water and sleep — with reminder
 a training plan built around your own sports and a relaxed nutrition plan.
 
 **Cost: €0.** Free/open-source libraries only, no backend, no account, no ads, no paid APIs,
-no Play Store fee (install the APK directly on your phone).
+no Play Store fee (install the APK directly on your phone). Internet is only used to stream exercise
+videos and download content-pack updates — nothing about you is ever uploaded.
 
 ## Features
 
@@ -17,7 +18,9 @@ no Play Store fee (install the APK directly on your phone).
 | **Progress** | Weight log + 7-day trend chart, pace & weeks to goal, consistency heatmap, weekly review (wins + focus) |
 | **Profile** | Edit profile/sports/week, notification settings, backup & restore |
 
-Also: guided core & mobility sessions (timer, easier/harder swaps, effort rating, 3-level progression),
+Also: 🎬 demo videos for every exercise (in-app YouTube player, or your own video per exercise),
+exercises & meals that update online from [`content-pack/`](content-pack/README.md) (weekly, Wi-Fi, verified),
+diet filters & custom targets, one-week plan changes, guided core & mobility sessions (timer, easier/harder swaps, effort rating, 3-level progression),
 reminders with Done / +250 ml / Snooze buttons, quiet hours, hourly smart suggestions (max 2/day),
 home-screen widget, dark mode & Material You colours.
 

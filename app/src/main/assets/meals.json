@@ -1,4 +1,5 @@
 {
+  "version": 1,
   "meals": [
     { "id": "yogurt_oats", "name": "Greek yogurt, oats & fruit", "type": "BREAKFAST", "proteinG": 30, "tags": ["quick", "vegetarian"], "contains": ["DAIRY", "GLUTEN"] },
     { "id": "eggs_toast", "name": "Scrambled eggs on wholegrain toast + fruit", "type": "BREAKFAST", "proteinG": 25, "tags": ["quick", "vegetarian"], "contains": ["EGGS", "GLUTEN"] },
