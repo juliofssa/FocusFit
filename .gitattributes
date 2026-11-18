@@ -1,0 +1,3 @@
+# Content pack files are checksummed byte-for-byte: keep LF endings everywhere so the
+# manifest matches what GitHub serves to the app.
+content-pack/** text eol=lf
