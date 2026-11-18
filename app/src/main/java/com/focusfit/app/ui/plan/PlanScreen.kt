@@ -28,8 +28,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import com.focusfit.app.domain.PlanChange
+import com.focusfit.app.domain.PlanChangeKind
+import com.focusfit.app.domain.PlannedSession
 import com.focusfit.app.domain.Progression
+import com.focusfit.app.domain.SessionType
 import com.focusfit.app.domain.WeekPlanner
+import java.time.LocalDate
 import com.focusfit.app.domain.model.WorkMode
 import com.focusfit.app.ui.common.InfoCard
 import java.time.format.TextStyle
@@ -45,40 +64,80 @@ fun PlanScreen(onStartRoutine: (String) -> Unit, vm: PlanViewModel = hiltViewMod
             Tab(tab == 0, onClick = { tab = 0 }, text = { Text("Training") })
             Tab(tab == 1, onClick = { tab = 1 }, text = { Text("Nutrition") })
         }
-        if (tab == 0) TrainingTab(state, onStartRoutine) else NutritionTab(state, vm)
+        if (tab == 0) TrainingTab(state, vm, onStartRoutine) else NutritionTab(state, vm)
     }
 }
 
 @Composable
-private fun TrainingTab(state: PlanUiState, onStartRoutine: (String) -> Unit) {
+private fun TrainingTab(state: PlanUiState, vm: PlanViewModel, onStartRoutine: (String) -> Unit) {
+    var addingTo by remember { mutableStateOf<LocalDate?>(null) }
+    var moving by remember { mutableStateOf<Pair<LocalDate, PlannedSession>?>(null) }
+
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(state.week, key = { it.day }) { day ->
-            val isToday = day.day == state.today.dayOfWeek
+        item {
+            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                listOf("This week", "Next week").forEachIndexed { i, label ->
+                    SegmentedButton(
+                        selected = state.weekOffset == i,
+                        onClick = { vm.showWeek(i) },
+                        shape = SegmentedButtonDefaults.itemShape(i, 2),
+                        label = { Text(label) },
+                    )
+                }
+            }
+        }
+        items(state.week, key = { it.date.toString() }) { day ->
+            val date = day.date ?: return@items
+            val isToday = date == state.today
             InfoCard {
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        day.day.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                        "${date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())} ${date.dayOfMonth}" +
+                            if (isToday) " · today" else "",
                         fontWeight = FontWeight.Bold,
                         color = if (isToday) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.width(48.dp),
+                        modifier = Modifier.weight(1f),
                     )
-                    Column(Modifier.weight(1f)) {
-                        day.sessions.forEach { s ->
-                            val time = s.time?.let { " · $it" } ?: ""
-                            val dur = if (s.durationMin > 0) " · ${s.durationMin}′" else ""
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("${s.emoji} ${s.title}$time$dur", modifier = Modifier.weight(1f))
-                                s.routineId?.let { id ->
-                                    TextButton(onClick = { onStartRoutine(id) }) { Text("▶") }
-                                }
-                            }
-                        }
-                    }
                     if (day.workMode == WorkMode.OFFICE) {
                         Text("Office", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.tertiary)
                     }
+                    IconButton(onClick = { addingTo = date }) { Icon(Icons.Outlined.Add, contentDescription = "Add a session on $date") }
+                }
+                if (day.sessions.isEmpty()) {
+                    Text("Free day", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                day.sessions.forEach { s ->
+                    SessionRow(
+                        s,
+                        onStart = s.routineId?.let { id -> { onStartRoutine(id) } },
+                        onSkip = if (s.type == SessionType.REST) null else ({ vm.skip(date, s) }),
+                        onMove = if (s.type == SessionType.REST) null else ({ moving = date to s }),
+                    )
+                }
+                state.changesOn(date).forEach { c ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            describe(c, state),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.weight(1f),
+                        )
+                        TextButton(onClick = { vm.undo(c) }) { Text("Undo") }
+                    }
                 }
             }
+        }
+        if (state.weekHasChanges) {
+            item {
+                TextButton(onClick = vm::resetWeek) { Text("Reset this week to your usual plan") }
+            }
+        }
+        item {
+            Text(
+                "Changes here only affect that week. To change your usual week, edit your sports in Profile.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
         item {
             Text("Home routines", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
@@ -104,21 +163,83 @@ private fun TrainingTab(state: PlanUiState, onStartRoutine: (String) -> Unit) {
                 }
             }
         }
-        item {
-            Text(
-                "Your sports stay on your days. Core, mobility and walks fill the free days. Change your sports and week in Profile.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp),
-            )
+    }
+
+    addingTo?.let { date ->
+        AlertDialog(
+            onDismissRequest = { addingTo = null },
+            title = { Text("Add on ${date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())}") },
+            text = {
+                Column {
+                    state.addable.forEach { s ->
+                        TextButton(onClick = { vm.add(date, s); addingTo = null }, modifier = Modifier.fillMaxWidth()) {
+                            Text("${s.emoji} ${s.title}" + (s.time?.let { " · $it" } ?: ""), modifier = Modifier.fillMaxWidth())
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = { TextButton(onClick = { addingTo = null }) { Text("Cancel") } },
+        )
+    }
+    moving?.let { (from, session) ->
+        AlertDialog(
+            onDismissRequest = { moving = null },
+            title = { Text("Move ${session.title} to…") },
+            text = {
+                Column {
+                    state.week.mapNotNull { it.date }.filter { it != from }.forEach { d ->
+                        TextButton(onClick = { vm.move(session, from, d); moving = null }, modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                "${d.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${d.dayOfMonth}",
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = { TextButton(onClick = { moving = null }) { Text("Cancel") } },
+        )
+    }
+}
+
+@Composable
+private fun SessionRow(s: PlannedSession, onStart: (() -> Unit)?, onSkip: (() -> Unit)?, onMove: (() -> Unit)?) {
+    var menu by remember { mutableStateOf(false) }
+    val time = s.time?.let { " · $it" } ?: ""
+    val dur = if (s.durationMin > 0) " · ${s.durationMin}′" else ""
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text("${s.emoji} ${s.title}$time$dur", modifier = Modifier.weight(1f))
+        if (onStart != null) TextButton(onClick = onStart) { Text("▶") }
+        if (onSkip != null || onMove != null) {
+            Box {
+                IconButton(onClick = { menu = true }) { Icon(Icons.Outlined.MoreVert, contentDescription = "Options for ${s.title}") }
+                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                    onMove?.let { DropdownMenuItem(text = { Text("Move to another day") }, onClick = { menu = false; it() }) }
+                    onSkip?.let { DropdownMenuItem(text = { Text("Skip this week") }, onClick = { menu = false; it() }) }
+                }
+            }
         }
+    }
+}
+
+private fun describe(c: PlanChange, state: PlanUiState): String {
+    fun dayName(d: LocalDate) = d.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+    val partner = c.moveGroup?.let { g -> state.profile.planChanges.firstOrNull { it.moveGroup == g && it.id != c.id } }
+    val name = c.session?.title ?: c.key.replaceFirstChar { it.uppercase() }
+    return when {
+        c.kind == PlanChangeKind.SKIP && partner != null -> "↪ $name moved to ${dayName(partner.date)}"
+        c.kind == PlanChangeKind.ADD && partner != null -> "↩ $name moved here from ${dayName(partner.date)}"
+        c.kind == PlanChangeKind.SKIP -> "✕ $name skipped this week"
+        else -> "＋ $name added"
     }
 }
 
 @Composable
 private fun NutritionTab(state: PlanUiState, vm: PlanViewModel) {
     val t = state.targets
-    val todayPlan = state.week.first { it.day == state.today.dayOfWeek }
+    val todayPlan = state.todayPlan
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
             InfoCard {
@@ -157,7 +278,7 @@ private fun NutritionTab(state: PlanUiState, vm: PlanViewModel) {
         item {
             InfoCard {
                 Text("🎟️ Free meals this week", style = MaterialTheme.typography.titleMedium)
-                Text("${state.freeMealsLeft} of ${PlanUiState.FREE_MEALS_PER_WEEK} left. Enjoy them, no guilt (80/20 rule).")
+                Text("${state.freeMealsLeft} of ${state.freeMealsPerWeek} left. Enjoy them, no guilt (80/20 rule).")
                 if (state.freeMealsUsed.isNotEmpty()) {
                     Text(
                         "Used: " + state.freeMealsUsed.joinToString { it.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()) },
