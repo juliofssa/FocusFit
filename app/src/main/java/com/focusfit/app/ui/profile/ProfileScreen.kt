@@ -70,6 +70,11 @@ fun ProfileScreen(
                 Text("You", style = MaterialTheme.typography.titleMedium)
                 Text("${p.sex.name.lowercase().replaceFirstChar { it.uppercase() }}, ${p.age} · ${p.heightCm.toInt()} cm · ${p.weightKg} kg")
                 Text("Goal: ${p.goal.name.lowercase()} → ${p.targetWeightKg} kg (${p.pace.kgPerWeek} kg/week)")
+                Text(
+                    "Food: ${p.dietStyle.label}" +
+                        if (p.foodExcludes.isNotEmpty()) " · avoids ${p.foodExcludes.joinToString { it.label.lowercase() }}" else "",
+                )
+                if (!p.targetOverrides.isEmpty) Text("Custom targets in use", color = MaterialTheme.colorScheme.primary)
                 p.activities.forEach { a ->
                     Text("${a.emoji} ${a.name}: ${a.days.sorted().joinToString { it.name.take(3).lowercase() }}")
                 }

@@ -15,6 +15,14 @@ plateau / too-fast advice, 8-week consistency heatmap + best streak, weekly revi
 ✅ M8 (JSON backup & restore via file picker, Glance home-screen widget, R8-shrunk release APK signed with the
 local debug key). **All milestones done.**
 
+## Upgrades
+
+| Phase | Scope | Status |
+|---|---|---|
+| **A — For anyone** | Neutral onboarding (no pre-filled author profile) + Food step; diet styles (vegetarian/pescatarian/vegan) & exclusions (allergies) filtering meal ideas, vegan options for every meal type; target overrides (kcal, protein, water, fixed steps, reading) with suggested values shown; free meals per week; configurable reminder times (core/mobility, reading, last water, Sunday review); this/next-week view with one-off skip / move / add + undo & reset — Room v8 | ✅ |
+| **B — Videos & online content** | Content pack (workouts/meals JSON + YouTube ids) hosted on GitHub, weekly Wi-Fi update with validation + bundled fallback; in-app YouTube player per exercise | Next |
+| **C — Quality of life** | Health Connect sleep & workout auto-ticks; boxing-style round timer for combat sports | Planned |
+
 | Milestone | Scope | Done when |
 |---|---|---|
 | **M0 — Setup** | Android Studio, project skeleton, theme, navigation, Room, Hilt | App launches on phone with 5 empty tabs |
