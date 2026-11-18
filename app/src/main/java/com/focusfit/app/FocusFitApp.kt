@@ -30,6 +30,7 @@ class FocusFitApp : Application() {
     @Inject lateinit var profiles: ProfileRepository
     @Inject lateinit var settings: SettingsRepository
     @Inject lateinit var daily: DailyRepository
+    @Inject lateinit var contentUpdater: com.focusfit.app.data.ContentUpdater
 
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -43,6 +44,8 @@ class FocusFitApp : Application() {
                 .debounce(500)
                 .collectLatest { scheduler.rescheduleAll() }
         }
+        // Weekly content-pack update (Wi-Fi only; keeps the current content on any problem).
+        appScope.launch { contentUpdater.checkIfDue() }
         // Keep the home-screen widget in step with today's progress (and roll it over at midnight).
         appScope.launch {
             flow { while (true) { emit(LocalDate.now()); delay(60_000) } }

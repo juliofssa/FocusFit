@@ -1,0 +1,19 @@
+# Validates the online content pack (exercises, videos, meals) before phones download it.
+name: Content pack check
+
+on:
+  push:
+    paths: ["content-pack/**"]
+  pull_request:
+    paths: ["content-pack/**"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate content and checksums
+        run: python content-pack/tools/build_manifest.py --check

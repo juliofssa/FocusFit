@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavType
 import com.focusfit.app.ui.settings.NotificationSettingsScreen
 import com.focusfit.app.ui.settings.TargetsScreen
+import com.focusfit.app.ui.exercises.ExercisesScreen
 import androidx.navigation.navArgument
 import com.focusfit.app.ui.onboarding.OnboardingScreen
 import com.focusfit.app.ui.session.SessionScreen
@@ -57,6 +58,7 @@ private const val EDIT_PROFILE_ROUTE = "edit_profile"
 private const val SESSION_ROUTE = "session/{routineId}"
 private const val NOTIFICATIONS_ROUTE = "notifications"
 private const val TARGETS_ROUTE = "targets"
+private const val EXERCISES_ROUTE = "exercises"
 
 @Composable
 fun FocusFitRoot(
@@ -79,7 +81,7 @@ private fun MainScaffold(pendingRoutine: String?, onRoutineOpened: () -> Unit) {
     val nav = rememberNavController()
     val backStack by nav.currentBackStackEntryAsState()
     val current = backStack?.destination
-    val fullScreen = current?.route in setOf(EDIT_PROFILE_ROUTE, SESSION_ROUTE, NOTIFICATIONS_ROUTE, TARGETS_ROUTE)
+    val fullScreen = current?.route in setOf(EDIT_PROFILE_ROUTE, SESSION_ROUTE, NOTIFICATIONS_ROUTE, TARGETS_ROUTE, EXERCISES_ROUTE)
     val startRoutine: (String) -> Unit = { id -> nav.navigate("session/$id") }
 
     // Opened from a core/mobility reminder → go straight to the guided session.
@@ -124,7 +126,8 @@ private fun MainScaffold(pendingRoutine: String?, onRoutineOpened: () -> Unit) {
             modifier = Modifier.padding(padding).consumeWindowInsets(padding),
         ) {
             composable(Tab.TODAY.route) { TodayScreen(onStartRoutine = startRoutine) }
-            composable(Tab.PLAN.route) { PlanScreen(onStartRoutine = startRoutine) }
+            composable(Tab.PLAN.route) { PlanScreen(onStartRoutine = startRoutine, onExercises = { nav.navigate(EXERCISES_ROUTE) }) }
+            composable(EXERCISES_ROUTE) { ExercisesScreen(onClose = { nav.popBackStack() }) }
             composable(SESSION_ROUTE, arguments = listOf(navArgument("routineId") { type = NavType.StringType })) {
                 SessionScreen(onClose = { nav.popBackStack() })
             }

@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "format": 1,
+  "notes": "Initial content: 24 exercises with demo videos, 4 routines, 26 meal ideas.",
+  "files": {
+    "workouts.json": "0a6783dafb7a324da444399948ba3a5473013387ea1155efad5fb64ce8b443cb",
+    "meals.json": "aaaa4e71a126556dd7a1131c04fd09f09b3bf256a59fb27a2ce24513164c6270"
+  }
+}

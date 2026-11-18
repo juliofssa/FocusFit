@@ -20,7 +20,7 @@ local debug key). **All milestones done.**
 | Phase | Scope | Status |
 |---|---|---|
 | **A — For anyone** | Neutral onboarding (no pre-filled author profile) + Food step; diet styles (vegetarian/pescatarian/vegan) & exclusions (allergies) filtering meal ideas, vegan options for every meal type; target overrides (kcal, protein, water, fixed steps, reading) with suggested values shown; free meals per week; configurable reminder times (core/mobility, reading, last water, Sunday review); this/next-week view with one-off skip / move / add + undo & reset — Room v8 | ✅ |
-| **B — Videos & online content** | Content pack (workouts/meals JSON + YouTube ids) hosted on GitHub, weekly Wi-Fi update with validation + bundled fallback; in-app YouTube player per exercise | Next |
+| **B — Videos & online content** | Verified, embeddable YouTube demo for all 24 exercises; in-app player (android-youtube-player, no API key) in session overview, during sessions (pauses timer) and in a new Exercise library; personal video per exercise (paste any YouTube link); `content-pack/` (manifest + SHA-256 + validator tool + GitHub Action); weekly Wi-Fi update with checksum & validation, atomic install, built-in fallback; Profile card: version, Check now, Source URL, Use built-in | ✅ |
 | **C — Quality of life** | Health Connect sleep & workout auto-ticks; boxing-style round timer for combat sports | Planned |
 
 | Milestone | Scope | Done when |

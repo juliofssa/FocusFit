@@ -55,7 +55,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun PlanScreen(onStartRoutine: (String) -> Unit, vm: PlanViewModel = hiltViewModel()) {
+fun PlanScreen(onStartRoutine: (String) -> Unit, onExercises: () -> Unit, vm: PlanViewModel = hiltViewModel()) {
     val state by vm.state.collectAsStateWithLifecycle()
     var tab by rememberSaveable { mutableIntStateOf(0) }
 
@@ -64,12 +64,12 @@ fun PlanScreen(onStartRoutine: (String) -> Unit, vm: PlanViewModel = hiltViewMod
             Tab(tab == 0, onClick = { tab = 0 }, text = { Text("Training") })
             Tab(tab == 1, onClick = { tab = 1 }, text = { Text("Nutrition") })
         }
-        if (tab == 0) TrainingTab(state, vm, onStartRoutine) else NutritionTab(state, vm)
+        if (tab == 0) TrainingTab(state, vm, onStartRoutine, onExercises) else NutritionTab(state, vm)
     }
 }
 
 @Composable
-private fun TrainingTab(state: PlanUiState, vm: PlanViewModel, onStartRoutine: (String) -> Unit) {
+private fun TrainingTab(state: PlanUiState, vm: PlanViewModel, onStartRoutine: (String) -> Unit, onExercises: () -> Unit) {
     var addingTo by remember { mutableStateOf<LocalDate?>(null) }
     var moving by remember { mutableStateOf<Pair<LocalDate, PlannedSession>?>(null) }
 
@@ -140,7 +140,10 @@ private fun TrainingTab(state: PlanUiState, vm: PlanViewModel, onStartRoutine: (
             )
         }
         item {
-            Text("Home routines", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+                Text("Home routines", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                TextButton(onClick = onExercises) { Text("📚 Exercises & videos") }
+            }
         }
         items(ROUTINES, key = { it.first }) { (id, name, desc) ->
             val ls = state.levels[id]

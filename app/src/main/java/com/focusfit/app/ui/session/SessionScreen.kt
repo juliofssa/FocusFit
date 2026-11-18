@@ -23,10 +23,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,14 +39,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.focusfit.app.domain.Exercise
 import com.focusfit.app.domain.Progression
 import com.focusfit.app.domain.SessionBuilder
+import com.focusfit.app.ui.common.ExerciseVideoDialog
 import com.focusfit.app.ui.common.InfoCard
 import kotlin.math.roundToInt
 
 @Composable
 fun SessionScreen(onClose: () -> Unit, vm: SessionViewModel = hiltViewModel()) {
     val s by vm.state.collectAsStateWithLifecycle()
+    var video by remember { mutableStateOf<Exercise?>(null) }
     LaunchedEffect(s.phase) { if (s.phase == Phase.SAVED) onClose() }
     val routine = s.routine ?: return
 
@@ -68,16 +73,17 @@ fun SessionScreen(onClose: () -> Unit, vm: SessionViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             when (s.phase) {
-                Phase.OVERVIEW -> Overview(s, vm::start)
-                Phase.ACTIVE -> Active(s, vm)
+                Phase.OVERVIEW -> Overview(s, vm::start, onVideo = { video = it })
+                Phase.ACTIVE -> Active(s, vm, onVideo = { vm.pause(); video = it })
                 Phase.RATE, Phase.SAVED -> Rate(vm::finish)
             }
         }
     }
+    video?.let { e -> ExerciseVideoDialog(e, s.videoFor(e), onDismiss = { video = null }) }
 }
 
 @Composable
-private fun Overview(s: SessionUiState, onStart: () -> Unit) {
+private fun Overview(s: SessionUiState, onStart: () -> Unit, onVideo: (Exercise) -> Unit) {
     val routine = s.routine!!
     val ls = s.levelStatus
     InfoCard {
@@ -95,9 +101,11 @@ private fun Overview(s: SessionUiState, onStart: () -> Unit) {
     // Unique exercises in order, with their amount.
     s.steps.filter { !it.isRest }.distinctBy { it.routineStepIndex }.forEach { step ->
         val sets = s.steps.count { !it.isRest && it.routineStepIndex == step.routineStepIndex && it.sideLabel != "right" }
-        Row {
-            Text("• ${step.exercise!!.name}", modifier = Modifier.weight(1f))
+        val ex = step.exercise!!
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("• ${ex.name}", modifier = Modifier.weight(1f))
             Text("${sets}× ${step.amount}", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick = { onVideo(ex) }) { Text(if (s.videoFor(ex) != null) "🎬" else "🔎") }
         }
     }
     Spacer(Modifier.height(8.dp))
@@ -110,7 +118,7 @@ private fun Overview(s: SessionUiState, onStart: () -> Unit) {
 }
 
 @Composable
-private fun Active(s: SessionUiState, vm: SessionViewModel) {
+private fun Active(s: SessionUiState, vm: SessionViewModel, onVideo: (Exercise) -> Unit) {
     val step = s.current ?: return
     Card(
         Modifier.fillMaxWidth(),
@@ -144,6 +152,10 @@ private fun Active(s: SessionUiState, vm: SessionViewModel) {
         } else {
             Button(onClick = vm::advance, modifier = Modifier.weight(2f)) { Text("Done ✔") }
         }
+    }
+
+    step.exercise?.let { ex ->
+        AssistChip(onClick = { onVideo(ex) }, label = { Text("🎬 How to do it (pauses the timer)") })
     }
 
     if (s.easier != null || s.harder != null) {

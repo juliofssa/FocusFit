@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- Re-schedule reminders after a reboot. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Exercise videos (YouTube) and weekly content-pack updates (download only; no user data is sent). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Read-only step count from Health Connect (Habits + Today). -->
     <uses-permission android:name="android.permission.health.READ_STEPS" />
 

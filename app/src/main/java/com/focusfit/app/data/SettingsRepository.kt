@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -36,6 +37,15 @@ class SettingsRepository @Inject constructor(@param:ApplicationContext private v
         val READING = stringPreferencesKey("reading_time")
         val LAST_WATER = stringPreferencesKey("last_water_time")
         val REVIEW = stringPreferencesKey("weekly_review_time")
+        val CONTENT_URL = stringPreferencesKey("content_url")
+        val CONTENT_LAST_CHECK = longPreferencesKey("content_last_check")
+        val CONTENT_STATUS = stringPreferencesKey("content_status")
+        val VIDEO_OVERRIDES = stringSetPreferencesKey("video_overrides")
+    }
+
+    companion object {
+        /** The app's GitHub repo; must be public for the app to read it (see content-pack/README.md). */
+        const val DEFAULT_CONTENT_URL = "https://raw.githubusercontent.com/juliofssa/FocusFit/main/content-pack/"
     }
 
     val notifications: Flow<NotificationSettings> = context.settingsStore.data.map { p ->
@@ -72,6 +82,33 @@ class SettingsRepository @Inject constructor(@param:ApplicationContext private v
             it[Keys.STEP_GOAL] = goal
             it[Keys.STEP_GOAL_WEEK] = weekStart.toString()
         }
+    }
+
+    // ---- Online content ----
+
+    /** Base URL of the content pack (folder with manifest.json); blank = online updates off. */
+    val contentUrl: Flow<String> = context.settingsStore.data.map { it[Keys.CONTENT_URL] ?: DEFAULT_CONTENT_URL }
+
+    val contentLastCheck: Flow<Long> = context.settingsStore.data.map { it[Keys.CONTENT_LAST_CHECK] ?: 0L }
+
+    val contentStatus: Flow<String?> = context.settingsStore.data.map { it[Keys.CONTENT_STATUS] }
+
+    suspend fun setContentUrl(url: String) = context.settingsStore.edit { it[Keys.CONTENT_URL] = url.trim() }
+
+    suspend fun recordContentCheck(at: Long, status: String) = context.settingsStore.edit {
+        it[Keys.CONTENT_LAST_CHECK] = at
+        it[Keys.CONTENT_STATUS] = status
+    }
+
+    // ---- Personal exercise videos (exercise id → YouTube id) ----
+
+    val videoOverrides: Flow<Map<String, String>> = context.settingsStore.data.map { p ->
+        p[Keys.VIDEO_OVERRIDES].orEmpty().mapNotNull { e -> e.split('=', limit = 2).takeIf { it.size == 2 }?.let { it[0] to it[1] } }.toMap()
+    }
+
+    suspend fun setVideoOverride(exerciseId: String, youtubeId: String?) = context.settingsStore.edit { p ->
+        val current = p[Keys.VIDEO_OVERRIDES].orEmpty().filterNot { it.startsWith("$exerciseId=") }.toSet()
+        p[Keys.VIDEO_OVERRIDES] = if (youtubeId == null) current else current + "$exerciseId=$youtubeId"
     }
 
     suspend fun save(s: NotificationSettings) {
