@@ -1,0 +1,71 @@
+{
+  "exercises": [
+    { "id": "dead_bug", "name": "Dead bug", "category": "core", "focus": "anti-extension", "reps": 8, "perSide": true, "cues": ["Low back pressed into the floor", "Slow exhale as you extend"], "easierId": "dead_bug_bent", "harderId": "dead_bug_straight", "equipment": "none" },
+    { "id": "dead_bug_bent", "name": "Dead bug (bent legs)", "category": "core", "focus": "anti-extension", "reps": 8, "perSide": true, "cues": ["Keep knees at 90°", "Move slowly"], "easierId": null, "harderId": "dead_bug", "equipment": "none" },
+    { "id": "dead_bug_straight", "name": "Dead bug (straight legs)", "category": "core", "focus": "anti-extension", "reps": 8, "perSide": true, "cues": ["Keep low back down", "Straight leg hovers above floor"], "easierId": "dead_bug", "harderId": null, "equipment": "none" },
+    { "id": "plank", "name": "Front plank", "category": "core", "focus": "anti-extension", "seconds": 30, "cues": ["Squeeze glutes", "Ribs down, straight line"], "easierId": "plank_knees", "harderId": "plank_shoulder_taps", "equipment": "mat" },
+    { "id": "plank_knees", "name": "Plank on knees", "category": "core", "focus": "anti-extension", "seconds": 30, "cues": ["Straight line from knees to head"], "easierId": null, "harderId": "plank", "equipment": "mat" },
+    { "id": "plank_shoulder_taps", "name": "Plank shoulder taps", "category": "core", "focus": "anti-rotation", "reps": 10, "perSide": true, "cues": ["Feet wide", "Hips don't rock"], "easierId": "plank", "harderId": null, "equipment": "mat" },
+    { "id": "side_plank", "name": "Side plank", "category": "core", "focus": "lateral", "seconds": 20, "perSide": true, "cues": ["Hips high", "Elbow under shoulder"], "easierId": "side_plank_knees", "harderId": "side_plank_dips", "equipment": "mat" },
+    { "id": "side_plank_knees", "name": "Side plank on knees", "category": "core", "focus": "lateral", "seconds": 20, "perSide": true, "cues": ["Hips forward and high"], "easierId": null, "harderId": "side_plank", "equipment": "mat" },
+    { "id": "side_plank_dips", "name": "Side plank hip dips", "category": "core", "focus": "lateral", "reps": 10, "perSide": true, "cues": ["Lower hip a few cm, drive back up"], "easierId": "side_plank", "harderId": null, "equipment": "mat" },
+    { "id": "bird_dog", "name": "Bird dog", "category": "core", "focus": "anti-rotation", "reps": 8, "perSide": true, "cues": ["Don't rotate hips", "2 s hold at the top"], "easierId": null, "harderId": null, "equipment": "mat" },
+    { "id": "glute_bridge", "name": "Glute bridge", "category": "core", "focus": "hip", "reps": 12, "cues": ["Drive through heels", "Pause at the top"], "easierId": null, "harderId": null, "equipment": "mat" },
+    { "id": "mountain_climbers", "name": "Mountain climbers", "category": "core", "focus": "conditioning", "seconds": 30, "cues": ["Hips level", "Fast knees"], "easierId": null, "harderId": null, "equipment": "none" },
+    { "id": "reverse_crunch", "name": "Reverse crunch", "category": "core", "focus": "flexion", "reps": 10, "cues": ["Curl pelvis up", "Control the way down"], "easierId": null, "harderId": null, "equipment": "mat" },
+    { "id": "russian_twist", "name": "Russian twist", "category": "core", "focus": "rotation", "reps": 12, "perSide": true, "cues": ["Rotate from the chest, not just the arms", "Lift heels to make it harder"], "easierId": null, "harderId": null, "equipment": "none" },
+    { "id": "hollow_hold", "name": "Hollow hold", "category": "core", "focus": "anti-extension", "seconds": 20, "cues": ["Low back down", "Bend knees to scale"], "easierId": null, "harderId": "hollow_rocks", "equipment": "mat" },
+    { "id": "hollow_rocks", "name": "Hollow rocks", "category": "core", "focus": "anti-extension", "reps": 15, "cues": ["Keep the hollow shape while rocking"], "easierId": "hollow_hold", "harderId": null, "equipment": "mat" },
+    { "id": "bear_crawl_hold", "name": "Bear crawl hold", "category": "core", "focus": "anti-extension", "seconds": 20, "cues": ["Knees 2 cm off the floor", "Flat back"], "easierId": null, "harderId": null, "equipment": "none" },
+    { "id": "cat_cow", "name": "Cat–cow", "category": "mobility", "focus": "spine", "seconds": 60, "cues": ["Move with your breath"], "easierId": null, "harderId": null, "equipment": "mat" },
+    { "id": "worlds_greatest", "name": "World's greatest stretch", "category": "mobility", "focus": "hip", "seconds": 45, "perSide": true, "cues": ["Elbow to instep, then rotate up"], "easierId": null, "harderId": null, "equipment": "none" },
+    { "id": "hip_90_90", "name": "90/90 hip switches", "category": "mobility", "focus": "hip", "seconds": 60, "cues": ["Sit tall", "Rotate knees side to side"], "easierId": null, "harderId": null, "equipment": "mat" },
+    { "id": "thoracic_rotation", "name": "Thoracic rotations", "category": "mobility", "focus": "thoracic", "seconds": 45, "perSide": true, "cues": ["On all fours, hand behind head, open up"], "easierId": null, "harderId": null, "equipment": "mat" },
+    { "id": "hip_flexor", "name": "Hip-flexor lunge stretch", "category": "mobility", "focus": "hip", "seconds": 45, "perSide": true, "cues": ["Squeeze back glute", "Tuck pelvis"], "easierId": null, "harderId": null, "equipment": "mat" },
+    { "id": "deep_squat", "name": "Deep squat hold", "category": "mobility", "focus": "hip", "seconds": 60, "cues": ["Heels down", "Elbows push knees out"], "easierId": null, "harderId": null, "equipment": "none" },
+    { "id": "childs_pose", "name": "Child's pose", "category": "mobility", "focus": "spine", "seconds": 60, "cues": ["Slow nasal breathing"], "easierId": null, "harderId": null, "equipment": "mat" }
+  ],
+  "routines": [
+    {
+      "id": "core_a", "name": "Core A · stability", "format": "SETS", "rounds": 1, "restBetweenSetsSec": 30, "restBetweenExercisesSec": 60,
+      "steps": [
+        { "exerciseId": "dead_bug", "sets": 3 },
+        { "exerciseId": "plank", "sets": 3 },
+        { "exerciseId": "side_plank", "sets": 2 },
+        { "exerciseId": "bird_dog", "sets": 2 },
+        { "exerciseId": "glute_bridge", "sets": 3 }
+      ]
+    },
+    {
+      "id": "core_b", "name": "Core B · power & rotation", "format": "CIRCUIT", "rounds": 3, "restBetweenRoundsSec": 60,
+      "steps": [
+        { "exerciseId": "mountain_climbers", "sets": 1 },
+        { "exerciseId": "reverse_crunch", "sets": 1 },
+        { "exerciseId": "russian_twist", "sets": 1 },
+        { "exerciseId": "hollow_hold", "sets": 1 },
+        { "exerciseId": "bear_crawl_hold", "sets": 1 }
+      ]
+    },
+    {
+      "id": "mobility", "name": "Mobility · recovery", "format": "CIRCUIT", "rounds": 1, "restBetweenRoundsSec": 0,
+      "steps": [
+        { "exerciseId": "cat_cow", "sets": 1 },
+        { "exerciseId": "worlds_greatest", "sets": 1 },
+        { "exerciseId": "hip_90_90", "sets": 1 },
+        { "exerciseId": "thoracic_rotation", "sets": 1 },
+        { "exerciseId": "hip_flexor", "sets": 1 },
+        { "exerciseId": "deep_squat", "sets": 1 },
+        { "exerciseId": "childs_pose", "sets": 1 }
+      ]
+    },
+    {
+      "id": "quick_core", "name": "Quick Core · 5 min", "format": "CIRCUIT", "rounds": 1, "restBetweenExercisesSec": 20,
+      "steps": [
+        { "exerciseId": "plank", "sets": 1, "secondsOverride": 40 },
+        { "exerciseId": "dead_bug", "sets": 1, "repsOverride": 10 },
+        { "exerciseId": "side_plank", "sets": 1 },
+        { "exerciseId": "hollow_hold", "sets": 1 }
+      ]
+    }
+  ]
+}

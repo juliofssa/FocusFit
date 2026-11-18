@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FocusFit</string>
+    <string name="widget_description">Today\'s to-dos and your streak</string>
+</resources>

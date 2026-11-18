@@ -1,0 +1,34 @@
+{
+  "meals": [
+    { "id": "yogurt_oats", "name": "Greek yogurt, oats & fruit", "type": "BREAKFAST", "proteinG": 30, "tags": ["quick", "vegetarian"], "contains": ["DAIRY", "GLUTEN"] },
+    { "id": "eggs_toast", "name": "Scrambled eggs on wholegrain toast + fruit", "type": "BREAKFAST", "proteinG": 25, "tags": ["quick", "vegetarian"], "contains": ["EGGS", "GLUTEN"] },
+    { "id": "overnight_oats", "name": "Overnight oats with protein & berries", "type": "BREAKFAST", "proteinG": 30, "tags": ["meal-prep", "vegetarian"], "contains": ["DAIRY", "GLUTEN"] },
+    { "id": "tofu_scramble", "name": "Tofu scramble with spinach on toast", "type": "BREAKFAST", "proteinG": 25, "tags": ["quick", "vegan"], "contains": ["SOY", "GLUTEN"] },
+    { "id": "soy_yogurt_bowl", "name": "Soy yogurt, oats, seeds & berries", "type": "BREAKFAST", "proteinG": 20, "tags": ["quick", "vegan"], "contains": ["SOY", "GLUTEN"] },
+
+    { "id": "chicken_rice_salad", "name": "Grilled chicken, rice & big salad", "type": "LUNCH", "proteinG": 40, "tags": ["meal-prep", "office"], "contains": ["MEAT"] },
+    { "id": "tuna_potato", "name": "Tuna, potatoes, chickpeas & greens", "type": "LUNCH", "proteinG": 40, "tags": ["office", "no-cook"], "contains": ["FISH"] },
+    { "id": "turkey_wrap", "name": "Turkey & veg wholegrain wrap", "type": "LUNCH", "proteinG": 35, "tags": ["quick", "office"], "contains": ["MEAT", "GLUTEN"] },
+    { "id": "lentil_bowl", "name": "Lentil, quinoa & roast veg bowl", "type": "LUNCH", "proteinG": 28, "tags": ["meal-prep", "office", "vegan"], "contains": [] },
+    { "id": "chickpea_feta_salad", "name": "Chickpea, feta & cucumber salad", "type": "LUNCH", "proteinG": 25, "tags": ["no-cook", "office", "vegetarian"], "contains": ["DAIRY"] },
+
+    { "id": "salmon_veg", "name": "Salmon, roast veg & sweet potato", "type": "DINNER", "proteinG": 40, "tags": ["oven"], "contains": ["FISH"] },
+    { "id": "omelette_veg", "name": "Omelette, veg & potatoes", "type": "DINNER", "proteinG": 40, "tags": ["quick", "vegetarian"], "contains": ["EGGS"] },
+    { "id": "beef_stirfry", "name": "Lean beef stir-fry with rice", "type": "DINNER", "proteinG": 40, "tags": ["quick"], "contains": ["MEAT", "SOY"] },
+    { "id": "chicken_curry", "name": "Light chicken curry with rice", "type": "DINNER", "proteinG": 40, "tags": ["meal-prep"], "contains": ["MEAT"] },
+    { "id": "pork_loin_veg", "name": "Pork loin, green beans & potatoes", "type": "DINNER", "proteinG": 38, "tags": ["oven"], "contains": ["PORK"] },
+    { "id": "tofu_stirfry", "name": "Crispy tofu & veg stir-fry with rice", "type": "DINNER", "proteinG": 30, "tags": ["quick", "vegan"], "contains": ["SOY"] },
+    { "id": "bean_chili", "name": "Three-bean chili with rice", "type": "DINNER", "proteinG": 25, "tags": ["meal-prep", "vegan"], "contains": [] },
+
+    { "id": "banana_shake", "name": "Banana + whey protein shake", "type": "PRE_TRAINING", "proteinG": 25, "tags": ["quick"], "contains": ["DAIRY"] },
+    { "id": "ham_cheese_toast", "name": "Ham & cheese toast", "type": "PRE_TRAINING", "proteinG": 20, "tags": ["quick"], "contains": ["PORK", "DAIRY", "GLUTEN"] },
+    { "id": "pb_banana_toast", "name": "Peanut butter & banana toast", "type": "PRE_TRAINING", "proteinG": 12, "tags": ["quick", "vegan"], "contains": ["NUTS", "GLUTEN"] },
+    { "id": "rice_cakes_hummus", "name": "Rice cakes, hummus & a banana", "type": "PRE_TRAINING", "proteinG": 8, "tags": ["quick", "vegan"], "contains": [] },
+
+    { "id": "skyr", "name": "Skyr or cottage cheese", "type": "SNACK", "proteinG": 15, "tags": ["quick", "vegetarian"], "contains": ["DAIRY"] },
+    { "id": "boiled_eggs", "name": "2 boiled eggs + fruit", "type": "SNACK", "proteinG": 13, "tags": ["office", "vegetarian"], "contains": ["EGGS"] },
+    { "id": "jerky_nuts", "name": "Beef jerky + a handful of nuts", "type": "SNACK", "proteinG": 20, "tags": ["office", "no-cook"], "contains": ["MEAT", "NUTS"] },
+    { "id": "edamame", "name": "Edamame with sea salt", "type": "SNACK", "proteinG": 17, "tags": ["quick", "vegan"], "contains": ["SOY"] },
+    { "id": "roasted_chickpeas", "name": "Roasted chickpeas + an apple", "type": "SNACK", "proteinG": 10, "tags": ["office", "vegan"], "contains": [] }
+  ]
+}
