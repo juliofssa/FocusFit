@@ -1,0 +1,7 @@
+<resources>
+    <!-- Dark mode: dark window so text drawn by Compose (light in dark mode) is never on white. -->
+    <style name="Theme.FocusFit" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:colorBackground">@color/app_background</item>
+    </style>
+</resources>

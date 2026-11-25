@@ -1,3 +1,7 @@
 <resources>
-    <style name="Theme.FocusFit" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Window colours match the Compose palette so there's never a flash of the wrong background. -->
+    <style name="Theme.FocusFit" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:colorBackground">@color/app_background</item>
+    </style>
 </resources>

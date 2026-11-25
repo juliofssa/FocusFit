@@ -41,6 +41,7 @@ class SettingsRepository @Inject constructor(@param:ApplicationContext private v
         val CONTENT_LAST_CHECK = longPreferencesKey("content_last_check")
         val CONTENT_STATUS = stringPreferencesKey("content_status")
         val VIDEO_OVERRIDES = stringSetPreferencesKey("video_overrides")
+        val WALLPAPER_COLORS = booleanPreferencesKey("wallpaper_colors")
     }
 
     companion object {
@@ -99,6 +100,13 @@ class SettingsRepository @Inject constructor(@param:ApplicationContext private v
         it[Keys.CONTENT_LAST_CHECK] = at
         it[Keys.CONTENT_STATUS] = status
     }
+
+    // ---- Appearance ----
+
+    /** Material You colours from the wallpaper (off by default: FocusFit's own palette is high-contrast). */
+    val useWallpaperColors: Flow<Boolean> = context.settingsStore.data.map { it[Keys.WALLPAPER_COLORS] ?: false }
+
+    suspend fun setUseWallpaperColors(on: Boolean) = context.settingsStore.edit { it[Keys.WALLPAPER_COLORS] = on }
 
     // ---- Personal exercise videos (exercise id → YouTube id) ----
 

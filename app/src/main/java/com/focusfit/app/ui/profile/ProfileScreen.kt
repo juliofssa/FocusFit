@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -38,8 +40,10 @@ fun ProfileScreen(
     vm: PlanViewModel = hiltViewModel(),
     backup: BackupViewModel = hiltViewModel(),
     content: ContentViewModel = hiltViewModel(),
+    appearance: AppearanceViewModel = hiltViewModel(),
 ) {
     val contentState by content.state.collectAsStateWithLifecycle()
+    val wallpaperColors by appearance.useWallpaperColors.collectAsStateWithLifecycle()
     var editingUrl by remember { mutableStateOf(false) }
     val state by vm.state.collectAsStateWithLifecycle()
     val message by backup.message.collectAsStateWithLifecycle()
@@ -112,6 +116,21 @@ fun ProfileScreen(
                     }
                     TextButton(onClick = { editingUrl = true }) { Text("Source") }
                     if (c.downloaded) TextButton(onClick = content::resetToBuiltIn) { Text("Use built-in") }
+                }
+            }
+        }
+        item {
+            InfoCard(Modifier.padding(horizontal = 16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text("🎨 Use wallpaper colours", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            "Android 12+ Material You. Off = FocusFit's high-contrast colours (easiest to read).",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Switch(checked = wallpaperColors, onCheckedChange = { appearance.setUseWallpaperColors(it) })
                 }
             }
         }
